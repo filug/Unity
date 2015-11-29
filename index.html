@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Unity by filug</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Unity</h1>
+        <h2>Simple Unit Testing for C</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/filug/Unity/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/filug/Unity/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/filug/Unity" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h3>
+<a id="unity" class="anchor" href="#unity" aria-hidden="true"><span class="octicon octicon-link"></span></a>Unity</h3>
+
+<p><a href="http://www.throwtheswitch.org/unity">Unity</a> is very good (and small) unit test framework developed by <a href="http://www.throwtheswitch.org">ThrowTheSwitch.org</a>.
+Together with another one tool from <a href="http://www.throwtheswitch.org">ThrowTheSwitch.org</a> i.e. <a href="http://www.throwtheswitch.org/cmock">CMock</a> any unit tests can be developed with minimal effort.</p>
+
+<h3>
+<a id="cmake" class="anchor" href="#cmake" aria-hidden="true"><span class="octicon octicon-link"></span></a>CMake</h3>
+
+<p>Unfortunately, by default, <a href="http://www.throwtheswitch.org/unity">Unity</a> is not integrated with <a href="https://cmake.org">CMake</a>. Additionally some additional effort is needed to:</p>
+
+<ul>
+<li>generate <em>runner</em> based on test definition,</li>
+<li>run unit tests and generate test results,</li>
+<li>summarize all test cases. </li>
+</ul>
+
+<p>Most of the work can be automated and <a href="https://github.com/filug/Unity">here</a> <a href="https://cmake.org">CMake</a> module (with full <a href="http://www.throwtheswitch.org/unity">Unity</a> project) is available.</p>
+
+<h4>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h4>
+
+<p>To add support for <a href="http://www.throwtheswitch.org/unity">Unity</a> tests please include <a href="https://github.com/filug/Unity/blob/master/cmake/unity.cmake">unity.cmake</a> file like presented below</p>
+
+<pre><code>include(3rdParty/Unity/cmake/unity.cmake)
+</code></pre>
+
+<p>After that each particular <a href="http://www.throwtheswitch.org/unity">Unity</a> test can be added by the following command</p>
+
+<pre><code>unity_add_test(name src1 [src2...])
+</code></pre>
+
+<blockquote>
+<p><strong>Note:</strong> It is important to notice that for the first source file (<em>src1</em> here) test runner will be generated.</p>
+</blockquote>
+
+<p>If needed <a href="http://www.throwtheswitch.org/unity">Unity</a> test can be linked with any static library by the following command</p>
+
+<pre><code>unity_link_libraries(name lib1 [lib2...])
+</code></pre>
+
+<p>All <a href="http://www.throwtheswitch.org/unity">Unity</a> tests are executed when <code>utest</code> target is invoked.</p>
+
+<h4>
+<a id="how-it-works" class="anchor" href="#how-it-works" aria-hidden="true"><span class="octicon octicon-link"></span></a>How it works</h4>
+
+<p>Each time when <code>unity_add_test</code> is called the first file is processed by <a href="https://github.com/filug/Unity/blob/master/auto/generate_test_runner.rb">generate_test_runner.rb</a> and customized <em>test runner</em> is generated.</p>
+
+<p>In the next step all sources files (from <code>unity_add_test</code> call + generated <em>test runner</em>) and libraries (added via <code>unity_link_libraries</code> command) are used to produce binary test application.</p>
+
+<p>Finally test application is executed and output is stored in <code>*.testresults</code> file.</p>
+
+<hr>
+
+<p>When all <a href="http://www.throwtheswitch.org/unity">Unity</a> tests were executed <a href="https://github.com/filug/Unity/blob/master/auto/unity_test_summary.rb">unity_test_summary.rb</a> is used to produce <a href="http://www.throwtheswitch.org/unity">Unity</a> test summary.</p>
+
+<h4>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<pre><code>$ make utest
+[ 15%] Built target foomock
+[ 23%] Built target cexception
+[ 30%] Built target unity
+[ 53%] Built target utest.foo-test-STATIC
+[ 61%] Built target utest.foo-test-STATIC.executor
+[ 84%] Built target utest.playground
+[ 92%] Built target utest.playground.executor
+[100%] Show Unity tests summary
+
+--------------------------
+OVERALL UNITY TEST SUMMARY
+--------------------------
+2 TOTAL TESTS 0 TOTAL FAILURES 0 IGNORED
+
+[100%] Built target utest
+</code></pre>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
